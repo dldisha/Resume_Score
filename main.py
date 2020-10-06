@@ -51,7 +51,7 @@ def programmingScore1(resume, progWords=None):
                        "go!", "groovy", "haskell", "java", "javascript", "matlab", "max MSP", "objective c",
                        "perl", "php", "html", "xml", "css", "processing", "python", "ruby", "sml", "swift",
                        "latex" "unity", "unix" "visual basic" "wolfram language", "xquery", "sql", "node.js",
-                       "scala", "kdb", "jquery", "mongodb"]
+                       "scala", "kdb", "jquery", "mongodb", "ruby on rails", "react"]
     else:
         programming = progWords
     programmingTotal = 0
@@ -148,6 +148,7 @@ def managementScore(resume, manWords=None):
                               "budget", "leadership", "operational development", "evaluations", "management",
                               "business", "project planning", "production schedule", "responsibility", "budgeting",
                               "optimization", "decision making", "organization", "business"]
+
     else:
         managementKeyWords = manWords
 
@@ -310,7 +311,6 @@ def overall(resume):
     fout.write("\\textbf{Average Score: } " + str(tenOverall(overall)) + "\\\\\n")
     fout.close()
     return overall
-
 
 def tenCategory(score):
     return score / 2.5
@@ -494,6 +494,9 @@ def wordCountScore(tokens):
         score -= min(abs(400 - count) / 20, 5)
     return score
 
+def tenwordCountScore(score):
+    return score / 1.5
+
 
 # def degreeScore(word_tokens):
 #     score = 10
@@ -642,6 +645,8 @@ def main(resume, cats):
     # overall score
     overall_score = overall(resume)
 
+
+
     # programming languages score
     programming_score = programmingScore(resume)
 
@@ -661,14 +666,20 @@ def main(resume, cats):
     section_score = sectionScore(resume)
 
     print("Finished parsing")
-    score = category_score + overall_score + programming_score + college_score + word_count_score + section_score
+    score = category_score + overall_score + programming_score + college_score + section_score
+
+    #hiring condition
+    if score > 60.00:
+        ans = "Selected"
+    else:
+        ans = "Not Selected"
 
     fout = open("results.tex", "a")
     fout.write("\\textbf{Best category: } " + cat + "\\\\\n\
 \\textbf{Overall Score: }" + str(score / 10.0) + " (out of 10)")
     fout.close()
 
-    return (cat, score, email)
+    return (cat, score, email, ans)
 
 
 def readFile(filename, mode="rt"):
